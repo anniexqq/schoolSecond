@@ -10,7 +10,7 @@
       sc.goods_number,
       gs.image_url,
       gs.new_price as price,
-      gs.desc,
+      gs.goods_desc as goodsDesc,
       gs.new_price*sc.goods_number as sumPrice,
       sc.pay_time
     FROM

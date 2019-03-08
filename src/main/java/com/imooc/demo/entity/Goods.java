@@ -3,7 +3,7 @@ package com.imooc.demo.entity;
 public class Goods {
     private Integer id;
     private String goodsName;
-    private String desc;
+    private String goodsDesc;
     private String newPrice;
     private String oldPrice;
     private String imageUrl;
@@ -25,12 +25,12 @@ public class Goods {
         this.goodsName = goodsName;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getGoodsDesc() {
+        return goodsDesc;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setGoodsDesc(String goodsDesc) {
+        this.goodsDesc = goodsDesc;
     }
 
     public String getNewPrice() {

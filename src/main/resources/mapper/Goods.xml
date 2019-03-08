@@ -30,8 +30,8 @@
 
   <insert id="insertGoods" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.imooc.demo.entity.Goods">
     INSERT INTO
-    goods(goods_name, desc,new_price,old_price,image_url,author_name)
+    goods(goods_name,goods_desc,new_price,old_price,image_url,author_name)
     VALUES
-    (#{goodsName},#{desc},#{newPrice},#{oldPrice},#{imageUrl},#{authorName})
+    (#{goodsName},#{goodsDesc},#{newPrice},#{oldPrice},#{imageUrl},#{authorName})
   </insert>
 </mapper>

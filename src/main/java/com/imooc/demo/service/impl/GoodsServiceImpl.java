@@ -34,8 +34,8 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public boolean addGoods(Goods goods) {
         if(goods.getGoodsName() != null && !"".equals(goods.getGoodsName())
-                && goods.getNewPrice() != null && !"".equals(goods.getNewPrice())
-                && goods.getOldPrice() != null && !"".equals(goods.getOldPrice())){
+                      && goods.getNewPrice() != null && !"".equals(goods.getNewPrice())
+                 && goods.getOldPrice() != null && !"".equals(goods.getOldPrice())){
             try{
                 int effectedNum = goodsDao.insertGoods(goods);
                 if(effectedNum>0){

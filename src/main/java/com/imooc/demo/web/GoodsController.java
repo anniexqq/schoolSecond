@@ -51,6 +51,7 @@ public class GoodsController {
     private Map<String,Object> addGoods(@RequestBody Goods goods){
         System.out.println("----------------新增商品信息------------------");
         Map<String,Object> modelMap = new HashMap<String,Object>();
+        goods.setImageUrl("/images/addtu.jpg");
         boolean flag = goodsService.addGoods(goods);
         modelMap.put("success",flag);
         return modelMap;

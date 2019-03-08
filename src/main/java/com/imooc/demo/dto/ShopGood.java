@@ -7,7 +7,7 @@ public class ShopGood {
     private String imageUrl;//商品图片
     private String userName;//用户名
     private String price;//价格
-    private String desc;//商品描述
+    private String goodsDesc;//商品描述
     private String sumPrice;//总价 用于已购商品页面展示每件商品总价
     private String payTime;//结算时间
     private boolean checked = false;
@@ -60,12 +60,12 @@ public class ShopGood {
         this.price = price;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getGoodsDesc() {
+        return goodsDesc;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setGoodsDesc(String goodsDesc) {
+        this.goodsDesc = goodsDesc;
     }
 
     public String getSumPrice() {
