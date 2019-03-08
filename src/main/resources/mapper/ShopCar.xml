@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.imooc.demo.dao.ShopCarDao">
+  <select id="queryShopCar"  resultType="com.imooc.demo.dto.ShopGood" parameterType="com.imooc.demo.entity.ShopCar">
+    SELECT
+      sc.id,
+      gs.goods_name,
+      sc.goods_number,
+      gs.image_url,
+      gs.new_price as price,
+      gs.desc,
+      gs.new_price*sc.goods_number as sumPrice,
+      sc.pay_time
+    FROM
+      shop_car sc
+    LEFT JOIN
+      goods gs ON sc.goods_id = gs.id
+    WHERE
+        sc.user_name = #{userName}
+      AND
+        sc.is_pay = #{isPay}
+    ORDER BY
+      sc.id
+    ASC
+  </select>
+
+  <select id="queryShopCarByUserAndGoodidAndIspay"  resultType="com.imooc.demo.entity.ShopCar">
+    SELECT *
+    FROM shop_car
+    WHERE
+        user_name = #{userName}
+    AND
+        goods_id = #{goodsId}
+    AND is_pay = #{isPay}
+  </select>
+
+  <select id="queryShopCarById"  resultType="com.imooc.demo.entity.ShopCar">
+    SELECT *
+    FROM shop_car
+    WHERE
+      id = #{id}
+  </select>
+
+  <insert id="insertShopCar" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.imooc.demo.entity.ShopCar">
+    INSERT INTO
+    shop_car(goods_id, goods_number,is_pay,user_name)
+    VALUES
+    (#{goodsId},#{goodsNumber},#{isPay},#{userName})
+  </insert>
+
+  <update id="updateShopCar" parameterType="com.imooc.demo.entity.ShopCar">
+    UPDATE shop_car
+    <set>
+      <if test="goodsId !=null">goods_id=#{goodsId},</if>
+      <if test="goodsNumber !=null">goods_number=#{goodsNumber},</if>
+      <if test="isPay !=null">is_pay=#{isPay},</if>
+      <if test="userName !=null">user_name=#{userName}</if>
+      <if test="payTime !=null">pay_time=#{payTime}</if>
+    </set>
+    WHERE id = #{id}
+  </update>
+
+</mapper>
