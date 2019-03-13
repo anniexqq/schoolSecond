@@ -32,14 +32,14 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Transactional
     @Override
-    public boolean addGoods(Goods goods) {
+    public int addGoods(Goods goods) {
         if(goods.getGoodsName() != null && !"".equals(goods.getGoodsName())
                       && goods.getNewPrice() != null && !"".equals(goods.getNewPrice())
                  && goods.getOldPrice() != null && !"".equals(goods.getOldPrice())){
             try{
                 int effectedNum = goodsDao.insertGoods(goods);
                 if(effectedNum>0){
-                    return true;
+                    return goods.getId();
                 }else{
                     //当抛出RuntimeException异常时，事务就会回滚
                     throw new RuntimeException("新增商品信息失败！");
@@ -49,6 +49,22 @@ public class GoodsServiceImpl implements GoodsService {
             }
         }else{
             throw new RuntimeException("收货人和手机号不能为空！");
+        }
+    }
+
+    @Transactional
+    @Override
+    public boolean updateGoodsImg(Goods goods) {
+        try {
+            int effectedNum = goodsDao.updateGoods(goods);
+            if (effectedNum > 0) {
+                return true;
+            } else {
+                //当抛出RuntimeException异常时，事务就会回滚
+                throw new RuntimeException("更新图片失败！");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("更新图片失败:" + e.getMessage());
         }
     }
 }

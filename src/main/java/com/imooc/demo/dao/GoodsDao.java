@@ -9,4 +9,5 @@ public interface GoodsDao {
     List<Goods> queryGoodsByAuthor(String author);
     List<Goods> queryGoodsByTitle(String goodsName);
     int insertGoods(Goods goods);
+    int updateGoods(Goods goods);
 }

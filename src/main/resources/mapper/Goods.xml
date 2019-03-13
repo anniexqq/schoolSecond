@@ -34,4 +34,18 @@
     VALUES
     (#{goodsName},#{goodsDesc},#{newPrice},#{oldPrice},#{imageUrl},#{authorName})
   </insert>
+
+  <update id="updateGoods" parameterType="com.imooc.demo.entity.Goods">
+    UPDATE goods
+    <set>
+      <if test="goodsName !=null">goods_name=#{goodsName},</if>
+      <if test="goodsDesc !=null">goods_desc=#{goodsDesc},</if>
+      <if test="newPrice !=null">new_price=#{newPrice},</if>
+      <if test="oldPrice !=null">old_price=#{oldPrice}</if>
+      <if test="imageUrl !=null">image_url=#{imageUrl}</if>
+      <if test="authorName !=null">author_name=#{authorName}</if>
+    </set>
+    WHERE id = #{id}
+  </update>
+
 </mapper>

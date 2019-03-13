@@ -8,5 +8,6 @@ public interface GoodsService {
     List<Goods> queryGoods();
     List<Goods> queryGoodsByAuthor(String author);
     List<Goods> queryGoodsByTitle(String title);
-    boolean addGoods(Goods goods);
+    int addGoods(Goods goods);
+    boolean updateGoodsImg(Goods goods);
 }
