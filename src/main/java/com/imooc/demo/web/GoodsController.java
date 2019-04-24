@@ -1,9 +1,11 @@
 package com.imooc.demo.web;
 
+import com.imooc.demo.dto.GoodsDTO;
 import com.imooc.demo.entity.Goods;
+import com.imooc.demo.entity.ShopCar;
 import com.imooc.demo.service.GoodsService;
+import com.imooc.demo.service.ShopCarService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,9 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 //import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -24,6 +25,8 @@ import java.util.Map;
 public class GoodsController {
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private ShopCarService shopcarService;
 
     @RequestMapping(value="/listGoods",method = RequestMethod.GET)
     private Map<String,Object> listGoods(){
@@ -36,10 +39,36 @@ public class GoodsController {
 
     @RequestMapping(value="/getGoodsByAuthor",method = RequestMethod.GET)
     private Map<String,Object> getGoodsByAuthor(String author){
-        System.out.println("----------------根据用户查询商品信息------------------");
+        System.out.println("----------------查询用户【 "+author+" 】发布的商品------------------");
         Map<String,Object> modelMap = new HashMap<String,Object>();
         List<Goods> list = goodsService.queryGoodsByAuthor(author);
-        modelMap.put("authorGoodsList",list);
+        SimpleDateFormat sDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<GoodsDTO> newList = new ArrayList<>();
+        for(Goods goods:list){
+            GoodsDTO goodsDTO = new GoodsDTO();
+            goodsDTO.setGoodsName(goods.getGoodsName());
+            goodsDTO.setId(goods.getId());
+            goodsDTO.setNewPrice(goods.getNewPrice());
+            goodsDTO.setOldPrice(goods.getOldPrice());
+            goodsDTO.setImageUrl(goods.getImageUrl());
+            if(null != goods.getCreateTime()) {
+                goodsDTO.setCreateTime(sDateFormat.format(goods.getCreateTime()));
+            }else{
+                goodsDTO.setCreateTime("");
+            }
+            //查询商品状态，已售出、未售出
+            String status = "未售出";
+            List<ShopCar> sclist = shopcarService.queryShopCarByGoodsIdAndAuthor(goods.getId(),goods.getAuthorName());
+            if(null != sclist && sclist.size()>0){
+                String isPay = sclist.get(0).getIsPay();
+                if(isPay.equals("1")){
+                    status = "已售出";
+                }
+            }
+            goodsDTO.setStatus(status);
+            newList.add(goodsDTO);
+        }
+        modelMap.put("authorGoodsList",newList);
         return modelMap;
     }
     @RequestMapping(value="/getGoodsByTitle",method = RequestMethod.GET)
@@ -56,8 +85,19 @@ public class GoodsController {
         System.out.println("----------------新增商品信息------------------");
         Map<String,Object> modelMap = new HashMap<String,Object>();
         goods.setImageUrl("/images/addtu.jpg");//先使用一个默认的图片，后面图片上传成功后再更新
+        goods.setCreateTime(new Date());
         int newGoodsId = goodsService.addGoods(goods);
         modelMap.put("goodsId",newGoodsId);
+        return modelMap;
+    }
+
+    //删除我发布的商品
+    @RequestMapping(value="/deleteMyGoods",method = RequestMethod.POST)
+    private Map<String,Object> putInShopcar(@RequestBody Goods goods){
+        System.out.println("----------------删除我发布的商品------------------");
+        Map<String,Object> modelMap = new HashMap<String,Object>();
+        boolean flag = goodsService.deleteMyGoods(goods);
+        modelMap.put("success",flag);
         return modelMap;
     }
 

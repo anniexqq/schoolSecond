@@ -1,8 +1,6 @@
-package com.imooc.demo.entity;
+package com.imooc.demo.dto;
 
-import java.util.Date;
-
-public class Goods {
+public class GoodsDTO {
     private Integer id;
     private String goodsName;
     private String goodsDesc;
@@ -10,7 +8,8 @@ public class Goods {
     private String oldPrice;
     private String imageUrl;
     private String authorName;
-    private Date createTime;
+    private String createTime;
+    private String status;//商品状态
 
     public Integer getId() {
         return id;
@@ -68,11 +67,19 @@ public class Goods {
         this.authorName = authorName;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -43,6 +43,15 @@
       id = #{id}
   </select>
 
+  <select id="queryShopCarByGoodsIdAndAuthor"  resultType="com.imooc.demo.entity.ShopCar">
+    SELECT *
+    FROM shop_car
+    WHERE
+      goods_id = #{goodsId}
+    AND
+      user_name=#{userName}
+  </select>
+
   <insert id="insertShopCar" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.imooc.demo.entity.ShopCar">
     INSERT INTO
     shop_car(goods_id, goods_number,is_pay,user_name)
@@ -61,5 +70,14 @@
     </set>
     WHERE id = #{id}
   </update>
+
+  <delete id="deleteShopCarByGoodsIdAndAuthor" parameterType="com.imooc.demo.entity.ShopCar">
+    DELETE FROM
+    shop_car
+    WHERE
+      goods_id=#{goodsId}
+    AND
+      user_name=#{userName}
+  </delete>
 
 </mapper>

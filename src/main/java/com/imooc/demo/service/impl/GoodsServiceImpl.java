@@ -1,7 +1,9 @@
 package com.imooc.demo.service.impl;
 
 import com.imooc.demo.dao.GoodsDao;
+import com.imooc.demo.dao.ShopCarDao;
 import com.imooc.demo.entity.Goods;
+import com.imooc.demo.entity.ShopCar;
 import com.imooc.demo.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.List;
 public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private GoodsDao goodsDao;
+    @Autowired
+    private ShopCarDao shopCarDao;
 
     @Override
     public List<Goods> queryGoods() {
@@ -66,5 +70,26 @@ public class GoodsServiceImpl implements GoodsService {
         } catch (Exception e) {
             throw new RuntimeException("更新图片失败:" + e.getMessage());
         }
+    }
+    @Transactional
+    @Override
+    public boolean deleteMyGoods(Goods goods){
+        //购物车（已支付、未支付）表数据（goodsId、userName）、删除商品表（id）
+        if(null != goods && null!=goods.getId() && null!=goods.getAuthorName()){
+            ShopCar delShopCar = new ShopCar();
+            delShopCar.setGoodsId(goods.getId());
+            delShopCar.setUserName(goods.getAuthorName());
+            int effNum = shopCarDao.deleteShopCarByGoodsIdAndAuthor(delShopCar);
+
+            List<Goods> list = goodsDao.queryGoodsById(String.valueOf(goods.getId()));
+            if(null != list){
+                int effectedNum = goodsDao.deleteGoods(goods.getId());//删除商品表
+                if (effectedNum <= 0) {
+                    throw new RuntimeException("删除商品数据失败！");
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

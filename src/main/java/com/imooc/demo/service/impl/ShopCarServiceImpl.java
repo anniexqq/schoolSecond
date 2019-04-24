@@ -64,5 +64,12 @@ public class ShopCarServiceImpl implements ShopCarService{
             shopCarDao.updateShopCar(shopCar);
         }
             return true;
-        }
+    }
+    public List<ShopCar> queryShopCarByGoodsIdAndAuthor(int goodsId,String userName){
+        ShopCar shopCar = new ShopCar();
+        shopCar.setGoodsId(goodsId);
+        shopCar.setUserName(userName);
+        List<ShopCar> list = shopCarDao.queryShopCarByGoodsIdAndAuthor(shopCar);
+        return list;
+    }
 }

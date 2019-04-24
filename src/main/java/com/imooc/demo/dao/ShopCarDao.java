@@ -11,4 +11,6 @@ public interface ShopCarDao {
     int updateShopCar(ShopCar shopCar);
     List<ShopCar> queryShopCarByUserAndGoodidAndIspay(ShopCar shopCar);
     ShopCar queryShopCarById(ShopCar shopCar);
+    int deleteShopCarByGoodsIdAndAuthor(ShopCar shopCar);
+    List<ShopCar> queryShopCarByGoodsIdAndAuthor(ShopCar shopCar);
 }

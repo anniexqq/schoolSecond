@@ -9,4 +9,5 @@ public interface ShopCarService {
     List<ShopGood> queryShopcar(ShopCar shopcar);
     boolean putInShopcar(ShopCar shopcar);
     boolean balance(String idAndNums);
+    List<ShopCar> queryShopCarByGoodsIdAndAuthor(int goodsId,String userName);
 }

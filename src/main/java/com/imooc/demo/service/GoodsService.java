@@ -10,4 +10,6 @@ public interface GoodsService {
     List<Goods> queryGoodsByTitle(String title);
     int addGoods(Goods goods);
     boolean updateGoodsImg(Goods goods);
+
+    public boolean deleteMyGoods(Goods goods);
 }
