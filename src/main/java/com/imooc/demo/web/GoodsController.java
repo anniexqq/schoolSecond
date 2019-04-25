@@ -160,4 +160,11 @@ public class GoodsController {
         return modelMap;
     }
 
+    //获取商品详情及留言
+    @RequestMapping(value="/getGoodsDetails",method = RequestMethod.GET)
+    private Map<String,Object> getGoodsDetails(String goodsId){
+        System.out.println("----------------查询商品详情及留言------------------");
+        Map<String,Object> modelMap = goodsService.getGoodsDetailsAndMsg(goodsId);
+        return modelMap;
+    }
 }

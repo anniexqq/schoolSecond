@@ -2,6 +2,7 @@ package com.imooc.demo.service.impl;
 
 import com.imooc.demo.dao.GoodsDao;
 import com.imooc.demo.dao.ShopCarDao;
+import com.imooc.demo.dto.GoodsInfoDTO;
 import com.imooc.demo.entity.Goods;
 import com.imooc.demo.entity.ShopCar;
 import com.imooc.demo.service.GoodsService;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -91,5 +95,18 @@ public class GoodsServiceImpl implements GoodsService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Map<String,Object> getGoodsDetailsAndMsg(String goodsId){
+        Map<String,Object> modelMap = new HashMap<String,Object>();
+        List<GoodsInfoDTO> newList = new ArrayList<>();
+        GoodsInfoDTO goodsInfoDTO = new GoodsInfoDTO();
+        goodsInfoDTO.setUserImage("/images/tu1.jpg");
+        goodsInfoDTO.setUserName("我是哈士奇");
+        newList.add(goodsInfoDTO);
+        modelMap.put("goodsInfoList",newList);
+        modelMap.put("msgCount","0");
+        return modelMap;
     }
 }
