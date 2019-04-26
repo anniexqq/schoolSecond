@@ -1,9 +1,12 @@
 package com.imooc.demo.service.impl;
 
 import com.imooc.demo.dao.GoodsDao;
+import com.imooc.demo.dao.MessageDao;
 import com.imooc.demo.dao.ShopCarDao;
-import com.imooc.demo.dto.GoodsInfoDTO;
+import com.imooc.demo.dto.GoodsDetailsDTO;
+import com.imooc.demo.dto.MessageDTO;
 import com.imooc.demo.entity.Goods;
+import com.imooc.demo.entity.Message;
 import com.imooc.demo.entity.ShopCar;
 import com.imooc.demo.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -22,6 +23,8 @@ public class GoodsServiceImpl implements GoodsService {
     private GoodsDao goodsDao;
     @Autowired
     private ShopCarDao shopCarDao;
+    @Autowired
+    private MessageDao messageDao;
 
     @Override
     public List<Goods> queryGoods() {
@@ -86,7 +89,7 @@ public class GoodsServiceImpl implements GoodsService {
             int effNum = shopCarDao.deleteShopCarByGoodsIdAndAuthor(delShopCar);
 
             List<Goods> list = goodsDao.queryGoodsById(String.valueOf(goods.getId()));
-            if(null != list){
+            if(null != list && list.size()>0){
                 int effectedNum = goodsDao.deleteGoods(goods.getId());//删除商品表
                 if (effectedNum <= 0) {
                     throw new RuntimeException("删除商品数据失败！");
@@ -98,15 +101,39 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public Map<String,Object> getGoodsDetailsAndMsg(String goodsId){
-        Map<String,Object> modelMap = new HashMap<String,Object>();
-        List<GoodsInfoDTO> newList = new ArrayList<>();
-        GoodsInfoDTO goodsInfoDTO = new GoodsInfoDTO();
-        goodsInfoDTO.setUserImage("/images/tu1.jpg");
-        goodsInfoDTO.setUserName("我是哈士奇");
-        newList.add(goodsInfoDTO);
-        modelMap.put("goodsInfoList",newList);
-        modelMap.put("msgCount","0");
-        return modelMap;
+    public GoodsDetailsDTO getGoodsDetailsAndMsg(String goodsId){
+        GoodsDetailsDTO goodsInfoDTO = new GoodsDetailsDTO();
+
+        if(null == goodsId || "".equals(goodsId)){
+            return null;
+        }
+        List<Goods> goodsList = goodsDao.queryGoodsById(goodsId);
+        if(null != goodsList && goodsList.size()>0){
+            Goods goods = goodsList.get(0);
+            goodsInfoDTO.setGoodsId(String.valueOf(goods.getId()));
+            goodsInfoDTO.setGoodsAuthorName(goods.getAuthorName());
+            goodsInfoDTO.setNewPrice(goods.getNewPrice());
+            goodsInfoDTO.setOldPrice(goods.getOldPrice());
+            goodsInfoDTO.setGoodsName(goods.getGoodsName());
+            goodsInfoDTO.setGoodsImageUrl(goods.getImageUrl());//商品详情图片
+            goodsInfoDTO.setGoodsDesc(goods.getGoodsDesc());
+        }else{
+            return null;
+        }
+
+        List<Message> msgList = messageDao.queryMessageByGoodsId(goodsId);
+        List<MessageDTO> messageDTOList = new ArrayList<>();
+        for(Message message:msgList){
+            MessageDTO messageDTO = new MessageDTO();
+            messageDTO.setMessageId(String.valueOf(message.getId()));
+            messageDTO.setUserImage(message.getUserImage());
+            messageDTO.setUserName(message.getUserName());
+            messageDTO.setComment(message.getComment());
+            messageDTO.setReplayUserName(message.getReplyUserName());
+            messageDTOList.add(messageDTO);
+        }
+        goodsInfoDTO.setMessageList(messageDTOList);
+        goodsInfoDTO.setMsgCount(String.valueOf(messageDTOList.size()));
+        return goodsInfoDTO;
     }
 }

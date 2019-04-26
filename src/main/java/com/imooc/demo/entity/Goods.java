@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class Goods {
     private Integer id;
-    private String goodsName;
-    private String goodsDesc;
+    private String goodsName;//商品标题
+    private String goodsDesc;//商品描述
     private String newPrice;
     private String oldPrice;
-    private String imageUrl;
-    private String authorName;
+    private String imageUrl;//商品图片地址
+    private String authorName;//发布者用户名
     private Date createTime;
 
     public Integer getId() {

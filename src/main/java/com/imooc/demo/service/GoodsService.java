@@ -1,5 +1,6 @@
 package com.imooc.demo.service;
 
+import com.imooc.demo.dto.GoodsDetailsDTO;
 import com.imooc.demo.entity.Goods;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface GoodsService {
     boolean updateGoodsImg(Goods goods);
 
     public boolean deleteMyGoods(Goods goods);
-    public Map<String,Object> getGoodsDetailsAndMsg(String goodsId);
+    public GoodsDetailsDTO getGoodsDetailsAndMsg(String goodsId);
 }

@@ -1,6 +1,7 @@
 package com.imooc.demo.web;
 
 import com.imooc.demo.dto.GoodsDTO;
+import com.imooc.demo.dto.GoodsDetailsDTO;
 import com.imooc.demo.entity.Goods;
 import com.imooc.demo.entity.ShopCar;
 import com.imooc.demo.service.GoodsService;
@@ -162,9 +163,9 @@ public class GoodsController {
 
     //获取商品详情及留言
     @RequestMapping(value="/getGoodsDetails",method = RequestMethod.GET)
-    private Map<String,Object> getGoodsDetails(String goodsId){
+    private GoodsDetailsDTO getGoodsDetails(String goodsId){
         System.out.println("----------------查询商品详情及留言------------------");
-        Map<String,Object> modelMap = goodsService.getGoodsDetailsAndMsg(goodsId);
-        return modelMap;
+        GoodsDetailsDTO goodsDetailsDTO = goodsService.getGoodsDetailsAndMsg(goodsId);
+        return goodsDetailsDTO;
     }
 }

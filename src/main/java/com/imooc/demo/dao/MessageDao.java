@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface MessageDao {
     //根据商品ID查存留言
-    List<Message> queryMessageByGoodsId();
+    List<Message> queryMessageByGoodsId(String goodsId);
+    int insertMessage(Message message);
 }

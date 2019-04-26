@@ -13,4 +13,11 @@
     DESC
   </select>
 
+  <insert id="insertMessage" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.imooc.demo.entity.Message">
+    INSERT INTO
+    message(goods_id,user_name,user_image,comment,create_time,reply_comment_id,reply_user_name)
+    VALUES
+    (#{goodsId},#{userName},#{userImage},#{comment},#{createTime},#{replyCommentId},#{replyUserName})
+  </insert>
+
 </mapper>

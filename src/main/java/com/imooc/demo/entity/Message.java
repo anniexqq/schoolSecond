@@ -5,12 +5,12 @@ import java.util.Date;
 public class Message {
     private Integer id;
     private Integer goodsId;
-    private String userName;
-    private String userImage;
-    private String comment;
-    private Date createTime;
-    private String replyCommentId;
-    private String replyUserName;
+    private String userName;//留言者
+    private String userImage;//留言用户头像
+    private String comment;//留言内容
+    private Date createTime;//留言创建时间
+    private String replyCommentId;//回复某一条留言
+    private String replyUserName;//回复谁的用户名
 
     public Integer getId() {
         return id;
