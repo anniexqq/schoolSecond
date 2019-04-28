@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +118,10 @@ public class GoodsServiceImpl implements GoodsService {
             goodsInfoDTO.setGoodsName(goods.getGoodsName());
             goodsInfoDTO.setGoodsImageUrl(goods.getImageUrl());//商品详情图片
             goodsInfoDTO.setGoodsDesc(goods.getGoodsDesc());
+            if(null != goods.getCreateTime()) {
+                String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(goods.getCreateTime());
+                goodsInfoDTO.setGoodsCreateTime(createTime);
+            }
         }else{
             return null;
         }

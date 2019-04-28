@@ -9,7 +9,7 @@ public class Message {
     private String userImage;//留言用户头像
     private String comment;//留言内容
     private Date createTime;//留言创建时间
-    private String replyCommentId;//回复某一条留言
+    private Integer replyCommentId;//回复某一条留言
     private String replyUserName;//回复谁的用户名
 
     public Integer getId() {
@@ -26,6 +26,14 @@ public class Message {
 
     public void setGoodsId(Integer goodsId) {
         this.goodsId = goodsId;
+    }
+
+    public Integer getReplyCommentId() {
+        return replyCommentId;
+    }
+
+    public void setReplyCommentId(Integer replyCommentId) {
+        this.replyCommentId = replyCommentId;
     }
 
     public String getUserName() {
@@ -60,13 +68,6 @@ public class Message {
         this.createTime = createTime;
     }
 
-    public String getReplyCommentId() {
-        return replyCommentId;
-    }
-
-    public void setReplyCommentId(String replyCommentId) {
-        this.replyCommentId = replyCommentId;
-    }
 
     public String getReplyUserName() {
         return replyUserName;
