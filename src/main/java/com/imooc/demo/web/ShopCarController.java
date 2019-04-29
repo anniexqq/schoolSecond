@@ -4,11 +4,13 @@ import com.imooc.demo.dto.ShopGood;
 import com.imooc.demo.entity.ShopCar;
 import com.imooc.demo.service.ShopCarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,8 @@ import java.util.Map;
 public class ShopCarController {
     @Autowired
     private ShopCarService shopcarService;
+    @Value("${imageServerURL}")
+    private String imageServerURL;
 
     //查询我的购物车；
     //查询用户已购商品
@@ -30,7 +34,12 @@ public class ShopCarController {
         System.out.println("----------------查询用户：【 "+shopcar.getUserName()+" 】 的购物车------------------");
         Map<String,Object> modelMap = new HashMap<String,Object>();
         List<ShopGood> list = shopcarService.queryShopcar(shopcar);
-        modelMap.put("goodsList",list);
+        List<ShopGood> nlist = new ArrayList<>();
+        for(ShopGood shopGood:list){
+            shopGood.setImageUrl(imageServerURL+shopGood.getImageUrl());
+            nlist.add(shopGood);
+        }
+        modelMap.put("goodsList",nlist);
         return modelMap;
     }
 

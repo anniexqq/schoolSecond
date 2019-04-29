@@ -10,10 +10,12 @@ import com.imooc.demo.entity.Message;
 import com.imooc.demo.entity.ShopCar;
 import com.imooc.demo.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,12 @@ public class GoodsServiceImpl implements GoodsService {
     private ShopCarDao shopCarDao;
     @Autowired
     private MessageDao messageDao;
+
+    @Value("${imageServerURL}")
+    private String imageServerURL;
+
+    @Value("${imageUploadURL}")
+    private String imageUploadURL;
 
     @Override
     public List<Goods> queryGoods() {
@@ -91,12 +99,18 @@ public class GoodsServiceImpl implements GoodsService {
 
             List<Goods> list = goodsDao.queryGoodsById(String.valueOf(goods.getId()));
             if(null != list && list.size()>0){
+                Goods qurGoods = list.get(0);
                 int effectedNum = goodsDao.deleteGoods(goods.getId());//删除商品表
                 if (effectedNum <= 0) {
                     throw new RuntimeException("删除商品数据失败！");
                 }
+                //数据库删完成后，删除本地图片
+                boolean delFlag =  deleteFile(imageUploadURL+qurGoods.getImageUrl());
+                if(!delFlag) {
+                    throw new RuntimeException("删除商品图片失败！");
+                }
+                return true;
             }
-            return true;
         }
         return false;
     }
@@ -116,7 +130,7 @@ public class GoodsServiceImpl implements GoodsService {
             goodsInfoDTO.setNewPrice(goods.getNewPrice());
             goodsInfoDTO.setOldPrice(goods.getOldPrice());
             goodsInfoDTO.setGoodsName(goods.getGoodsName());
-            goodsInfoDTO.setGoodsImageUrl(goods.getImageUrl());//商品详情图片
+            goodsInfoDTO.setGoodsImageUrl(imageServerURL+goods.getImageUrl());//商品详情图片
             goodsInfoDTO.setGoodsDesc(goods.getGoodsDesc());
             if(null != goods.getCreateTime()) {
                 String createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(goods.getCreateTime());
@@ -140,5 +154,26 @@ public class GoodsServiceImpl implements GoodsService {
         goodsInfoDTO.setMessageList(messageDTOList);
         goodsInfoDTO.setMsgCount(String.valueOf(messageDTOList.size()));
         return goodsInfoDTO;
+    }
+
+    /**
+     * 删除单个文件
+     *
+     * @param fileName 要删除的文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public static boolean deleteFile(String fileName) {
+        File file = new File(fileName);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            System.out.println("删除单个文件失败：" + fileName + "不存在！");
+            return false;
+        }
     }
 }

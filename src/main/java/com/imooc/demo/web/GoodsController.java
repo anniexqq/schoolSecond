@@ -8,6 +8,7 @@ import com.imooc.demo.service.GoodsService;
 import com.imooc.demo.service.ShopCarService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,13 +29,22 @@ public class GoodsController {
     private GoodsService goodsService;
     @Autowired
     private ShopCarService shopcarService;
+    @Value("${imageUploadURL}")
+    private String imageUploadURL;
+    @Value("${imageServerURL}")
+    private String imageServerURL;
 
     @RequestMapping(value="/listGoods",method = RequestMethod.GET)
     private Map<String,Object> listGoods(){
         System.out.println("----------------查询商品信息------------------");
         Map<String,Object> modelMap = new HashMap<String,Object>();
         List<Goods> list = goodsService.queryGoods();
-        modelMap.put("goodsList",list);
+        List<Goods> nlist = new ArrayList<>();
+        for(Goods goods:list){
+            goods.setImageUrl(imageServerURL+goods.getImageUrl());
+            nlist.add(goods);
+        }
+        modelMap.put("goodsList",nlist);
         return modelMap;
     }
 
@@ -51,7 +61,7 @@ public class GoodsController {
             goodsDTO.setId(goods.getId());
             goodsDTO.setNewPrice(goods.getNewPrice());
             goodsDTO.setOldPrice(goods.getOldPrice());
-            goodsDTO.setImageUrl(goods.getImageUrl());
+            goodsDTO.setImageUrl(imageServerURL+goods.getImageUrl());
             if(null != goods.getCreateTime()) {
                 goodsDTO.setCreateTime(sDateFormat.format(goods.getCreateTime()));
             }else{
@@ -77,7 +87,12 @@ public class GoodsController {
         System.out.println("----------------搜索商品------------------");
         Map<String,Object> modelMap = new HashMap<String,Object>();
         List<Goods> list = goodsService.queryGoodsByTitle(goodsName);
-        modelMap.put("goodsList",list);
+        List<Goods> nlist = new ArrayList<>();
+        for(Goods goods:list){
+            goods.setImageUrl(imageServerURL+goods.getImageUrl());
+            nlist.add(goods);
+        }
+        modelMap.put("goodsList",nlist);
         return modelMap;
     }
 
@@ -85,7 +100,6 @@ public class GoodsController {
     private Map<String,Object> addGoods(@RequestBody Goods goods){
         System.out.println("----------------新增商品信息------------------");
         Map<String,Object> modelMap = new HashMap<String,Object>();
-        goods.setImageUrl("/images/addtu.jpg");//先使用一个默认的图片，后面图片上传成功后再更新
         goods.setCreateTime(new Date());
         int newGoodsId = goodsService.addGoods(goods);
         modelMap.put("goodsId",newGoodsId);
@@ -105,8 +119,6 @@ public class GoodsController {
     @PostMapping(value="/uploadGoodsImg" ,headers="content-type=multipart/form-data")
     public Map<String,Object> uploadGoodsImg(int goodsId,@RequestParam("file") MultipartFile[] files) throws Exception {
         Map<String,Object> modelMap = new HashMap<String,Object>();
-        //文件保存的命名空间
-        String fileSpace="E:/IdeaProjects/schoolSecond/small";
         //保存到数据库的相对路径
         String uploadPathDB="/images";
         FileOutputStream fileOutputStream=null;
@@ -119,7 +131,7 @@ public class GoodsController {
                 System.out.println("----imgName:"+fileName);
                 if (null != fileName && !fileName.equals("")) {
                     //文件保存的最终路径
-                    String finalPath = fileSpace + uploadPathDB + "/" + fileName;
+                    String finalPath = imageUploadURL + uploadPathDB + "/" + fileName;
                     //设置数据库保存的路径
                     uploadPathDB += ("/" + fileName);
                     File outFile = new File(finalPath);
